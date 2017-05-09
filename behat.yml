@@ -1,0 +1,9 @@
+default:
+  suites:
+    domain:
+      paths:
+        - %paths.base%/tests/functional/features/
+      contexts:
+        - CardBattleGame\Tests\Functional\Domain\GameCreatingContext
+        - CardBattleGame\Tests\Functional\Domain\EventSourcedContext
+        - CardBattleGame\Tests\Functional\Domain\CardsDealingContext

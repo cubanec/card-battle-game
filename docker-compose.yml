@@ -1,0 +1,12 @@
+version: "2"
+services:
+  php:
+    container_name: card-battle-game
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/var/www/card-battle-game
+    tty: true
+    environment:
+      PHP_IDE_CONFIG: "serverName=card-battle-game"
