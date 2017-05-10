@@ -20,4 +20,14 @@ final class Turn
         $this->player = $player;
         $this->movePoints = $movePoints;
     }
+
+    public function useMovePoints(MovePoints $movePoints)
+    {
+        $this->movePoints = new MovePoints($this->movePoints->getPointsCount() - $movePoints->getPointsCount());
+    }
+
+    public function getMovePoints(): MovePoints
+    {
+        return $this->movePoints;
+    }
 }

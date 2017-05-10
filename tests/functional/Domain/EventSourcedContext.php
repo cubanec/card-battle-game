@@ -4,10 +4,13 @@ namespace CardBattleGame\Tests\Functional\Domain;
 
 use ArrayIterator;
 use Behat\Behat\Context\Context;
+use CardBattleGame\Domain\Event\CardPlayed;
 use CardBattleGame\Domain\Game;
 use CardBattleGame\Domain\GameRepository;
 use CardBattleGame\Infrastructure\GameRepositoryImpl;
 use Prooph\Common\Event\ProophActionEventEmitter;
+use Prooph\Common\Messaging\DomainEvent;
+use Prooph\EventSourcing\AggregateChanged;
 use Prooph\EventStore\InMemoryEventStore;
 use Prooph\EventStore\Stream;
 use Prooph\EventStore\StreamName;
@@ -51,17 +54,11 @@ final class EventSourcedContext implements Context
         $this->gameRepository = new GameRepositoryImpl($this->eventStore);
     }
 
-    /**
-     * @return GameRepository
-     */
     public function getGameRepository(): GameRepository
     {
         return $this->gameRepository;
     }
 
-    /**
-     * @return \Iterator
-     */
     public function getPersistedEventStream(): \Iterator
     {
         return $this->eventStore->load(
@@ -69,17 +66,11 @@ final class EventSourcedContext implements Context
         );
     }
 
-    /**
-     * @return Uuid
-     */
     public function getAggregateId(): Uuid
     {
         return $this->aggregateId;
     }
 
-    /**
-     * @param Uuid $aggregateId
-     */
     public function setAggregateId(Uuid $aggregateId)
     {
         $this->aggregateId = $aggregateId;
@@ -88,5 +79,25 @@ final class EventSourcedContext implements Context
     public function getAggregate(): ?Game
     {
         return $this->getGameRepository()->get($this->getAggregateId());
+    }
+
+    public function appendEvent(AggregateChanged $domainEvent): void
+    {
+        $this->eventStore->appendTo(
+            $this->singleStream->streamName(),
+            new \IteratorIterator(new \ArrayObject([$domainEvent]))
+        );
+    }
+
+    public function hasAggregateRecordedEvent(AggregateChanged $event)
+    {
+        $eventStream = $this->getPersistedEventStream();
+        foreach ($eventStream as $persistedEvent) {
+            switch (get_class($persistedEvent)) {
+                case CardPlayed::class:
+                    return get_class($event) === CardPlayed::class
+                        && $event->getCard()->equals($persistedEvent->getCard());
+            }
+        }
     }
 }

@@ -3,17 +3,18 @@
 namespace CardBattleGame\Tests\Functional\Domain;
 
 use ArrayIterator;
+use Assert\Assertion;
 use Behat\Behat\Context\Context;
 use CardBattleGame\Domain\Card;
 use CardBattleGame\Domain\Event\CardDealtForPlayerOnTurn;
 use CardBattleGame\Domain\Event\GameCreated;
-use Webmozart\Assert\Assert;
 
 final class CardsDealingContext implements Context
 {
     use EventSourcedContextTrait;
 
     /**
+     * @Given player on the move was dealt with card of type :type with value :value and cost of :movePoints MP
      * @When card of type :type with value :value HP and cost of :cost MP is dealt for player on turn
      */
     public function cardOfTypeWithValueHpAndCostOfMpIsDealtForPlayerOnTurn($type, $value, $cost)
@@ -33,8 +34,8 @@ final class CardsDealingContext implements Context
         /** @var ArrayIterator $persistedEventStream */
         $persistedEventStream = $this->eventSourcedContext->getPersistedEventStream();
 
-        Assert::isInstanceOf($persistedEventStream->current(), GameCreated::class);
+        Assertion::isInstanceOf($persistedEventStream->current(), GameCreated::class);
         $persistedEventStream->next();
-        Assert::isInstanceOf($persistedEventStream->current(), CardDealtForPlayerOnTurn::class);
+        Assertion::isInstanceOf($persistedEventStream->current(), CardDealtForPlayerOnTurn::class);
     }
 }

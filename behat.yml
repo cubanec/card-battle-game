@@ -7,3 +7,4 @@ default:
         - CardBattleGame\Tests\Functional\Domain\GameCreatingContext
         - CardBattleGame\Tests\Functional\Domain\EventSourcedContext
         - CardBattleGame\Tests\Functional\Domain\CardsDealingContext
+        - CardBattleGame\Tests\Functional\Domain\CardsPlayingContext

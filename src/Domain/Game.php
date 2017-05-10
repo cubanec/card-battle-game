@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace CardBattleGame\Domain;
 
 use CardBattleGame\Domain\Event\CardDealtForPlayerOnTurn;
+use CardBattleGame\Domain\Event\CardPlayed;
 use CardBattleGame\Domain\Event\GameCreated;
 use Prooph\EventSourcing\AggregateChanged;
 use Prooph\EventSourcing\AggregateRoot;
@@ -56,14 +57,41 @@ final class Game extends AggregateRoot
     public function dealCardForPlayerOnTurn(Card $card): void
     {
         $this->recordThat(CardDealtForPlayerOnTurn::occur(
-            $this->aggregateId(),
-            $card->asArray()
+            $this->aggregateId(), [
+                'player-on-turn' => $this->getPlayerOnTurn()->asArray(),
+                'card' => $card->asArray(),
+            ]
+        ));
+    }
+
+    public function playCardByPlayerOnTurn(Card $card)
+    {
+        $this->recordThat(CardPlayed::occur(
+            $this->aggregateId(), [
+                'player-on-turn' => $this->getPlayerOnTurn()->asArray(),
+                'card' => $card->asArray(),
+            ]
         ));
     }
 
     public function getGameId() : Uuid
     {
         return $this->gameId;
+    }
+
+    public function getPlayerOnTurn(): Player
+    {
+        return $this->playerOnTurn;
+    }
+
+    public function getPlayerWaiting(): Player
+    {
+        return $this->playerWaiting;
+    }
+
+    public function getTurn(): Turn
+    {
+        return $this->turn;
     }
 
     protected function aggregateId(): string
@@ -87,7 +115,14 @@ final class Game extends AggregateRoot
                 break;
             case CardDealtForPlayerOnTurn::class:
                 /** @var CardDealtForPlayerOnTurn $event */
-                $this->playerOnTurn->dealCard($event->getCard());
+                $this->getPlayerOnTurn()->dealCard($event->getCard());
+                break;
+            case CardPlayed::class:
+                /** @var CardPlayed $event */
+                $card = $event->getCard();
+                $this->getPlayerOnTurn()->playCard($card);
+                $this->getPlayerWaiting()->takeDamage($card->getValue());
+                $this->getTurn()->useMovePoints(new MovePoints($card->getMpCost()));
                 break;
         }
     }

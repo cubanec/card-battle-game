@@ -2,12 +2,12 @@
 
 namespace CardBattleGame\Tests\Functional\Domain;
 
+use Assert\Assertion;
 use Behat\Behat\Context\Context;
 use CardBattleGame\Domain\Event\GameCreated;
 use CardBattleGame\Domain\Game;
 use CardBattleGame\Domain\MovePoints;
 use CardBattleGame\Domain\Player;
-use Webmozart\Assert\Assert;
 
 final class GameCreatingContext implements Context
 {
@@ -34,6 +34,6 @@ final class GameCreatingContext implements Context
     {
         $persistedEventStream = $this->eventSourcedContext->getPersistedEventStream();
 
-        Assert::isInstanceOf($persistedEventStream->current(), GameCreated::class);
+        Assertion::isInstanceOf($persistedEventStream->current(), GameCreated::class);
     }
 }

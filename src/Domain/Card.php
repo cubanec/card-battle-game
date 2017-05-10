@@ -53,6 +53,13 @@ final class Card
         return $this->mpCost;
     }
 
+    public function equals(Card $comparedCard): bool
+    {
+        return $comparedCard->getType() === $this->getType()
+            && $comparedCard->getMpCost() === $this->getMpCost()
+            && $comparedCard->getValue() === $this->getValue();
+    }
+
     public function asArray(): array
     {
         return [
