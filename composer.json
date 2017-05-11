@@ -6,7 +6,9 @@
     "prooph/common": "^4.1",
     "prooph/event-sourcing": "^5.0",
     "ramsey/uuid": "^3.6",
-    "prooph/event-store": "^7.0"
+    "prooph/event-store": "^7.0",
+    "prooph/service-bus": "^6.0",
+    "league/container": "^2.4"
   },
   "autoload": {
     "psr-4": {
