@@ -3,7 +3,8 @@
 namespace CardBattleGame\Tests\Functional\Application;
 
 use Behat\Behat\Context\Context;
-use Behat\Behat\Tester\Exception\PendingException;
+use CardBattleGame\Application\Command\CreateGame;
+use CardBattleGame\Application\Command\CreateGameHandler;
 use CardBattleGame\Domain\Game;
 use CardBattleGame\Domain\MovePoints;
 use CardBattleGame\Domain\Player;
@@ -20,13 +21,15 @@ class GameCreatingContext implements Context
      */
     public function newGameIsCreatedWithMpPerTurnWithHpPerPlayer($mp, $hp)
     {
-        throw new PendingException();
-
         $gameRepository = $this->eventSourcedContext->getGameRepository();
 
-        //TODO: use $this->cqrsContext->getCommandRouter() to configure command routing
+        $handler = new CreateGameHandler($gameRepository);
 
-        //TODO: use $this->cqrsContext->getCommandBus()
+        $this->getCqrsContext()->getCommandRouter()->route(CreateGame::class)->to($handler);
+
+        $command = new CreateGame('fist', 'aecond', $hp, $mp);
+
+        $this->getCqrsContext()->getCommandBus()->dispatch($command);
 
         $persistedEventStream = $this->eventSourcedContext->getPersistedEventStream();
         $this->eventSourcedContext->setAggregateId(Uuid::fromString($persistedEventStream->current()->aggregateId()));

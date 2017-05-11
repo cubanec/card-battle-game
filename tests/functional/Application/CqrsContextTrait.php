@@ -19,4 +19,9 @@ trait CqrsContextTrait
         $environment = $scope->getEnvironment();
         $this->cqrsContext = $environment->getContext(CqrsContext::class);
     }
+
+    protected function getCqrsContext(): CqrsContext
+    {
+        return $this->cqrsContext;
+    }
 }

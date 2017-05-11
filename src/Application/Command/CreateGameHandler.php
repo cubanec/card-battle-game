@@ -16,6 +16,11 @@ final class CreateGameHandler
         $this->gameRepository = $gameRepository;
     }
 
+    public function __invoke(CreateGame $command): void
+    {
+        $this->handle($command);
+    }
+
     public function handle(CreateGame $createGameCommand): void
     {
         $playerOnTurn = new Player(
