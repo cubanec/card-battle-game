@@ -1,14 +1,22 @@
 <?php
-/**
- * Created by Jakub Niec <jakub.niec@rst.com.pl>
- * Date: 11.05.17
- * Time: 11:22
- */
 
 namespace CardBattleGame\Tests\Functional\Application;
 
+use Behat\Behat\Context\Environment\InitializedContextEnvironment;
+use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 
 trait CqrsContextTrait
 {
+    /**
+     * @var CqrsContext
+     */
+    private $cqrsContext;
 
+    /** @BeforeScenario */
+    public function attachCqrsToApplicationContext(BeforeScenarioScope $scope)
+    {
+        /** @var InitializedContextEnvironment $environment */
+        $environment = $scope->getEnvironment();
+        $this->cqrsContext = $environment->getContext(CqrsContext::class);
+    }
 }

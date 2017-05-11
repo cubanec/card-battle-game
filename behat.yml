@@ -4,7 +4,18 @@ default:
       paths:
         - %paths.base%/tests/functional/features/
       contexts:
-        - CardBattleGame\Tests\Functional\Domain\GameCreatingContext
         - CardBattleGame\Tests\Functional\Domain\EventSourcedContext
+        - CardBattleGame\Tests\Functional\Domain\GameContext
+        - CardBattleGame\Tests\Functional\Domain\GameCreatingContext
         - CardBattleGame\Tests\Functional\Domain\CardsDealingContext
         - CardBattleGame\Tests\Functional\Domain\CardsPlayingContext
+    application:
+      paths:
+        - %paths.base%/tests/functional/features/
+      contexts:
+        - CardBattleGame\Tests\Functional\Application\CqrsContext
+        - CardBattleGame\Tests\Functional\Domain\EventSourcedContext
+        - CardBattleGame\Tests\Functional\Domain\GameContext
+        - CardBattleGame\Tests\Functional\Application\GameCreatingContext
+        - CardBattleGame\Tests\Functional\Application\CardsDealingContext
+        - CardBattleGame\Tests\Functional\Application\CardsPlayingContext

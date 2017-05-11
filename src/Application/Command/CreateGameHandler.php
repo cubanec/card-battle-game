@@ -16,7 +16,7 @@ final class CreateGameHandler
         $this->gameRepository = $gameRepository;
     }
 
-    public function __invoke(CreateGame $createGameCommand): void
+    public function handle(CreateGame $createGameCommand): void
     {
         $playerOnTurn = new Player(
             $createGameCommand->getPlayerOnTurnName(),
