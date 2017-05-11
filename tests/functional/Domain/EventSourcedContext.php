@@ -7,10 +7,12 @@ use Behat\Behat\Context\Context;
 use CardBattleGame\Domain\Event\CardPlayed;
 use CardBattleGame\Domain\Game;
 use CardBattleGame\Domain\GameRepository;
+use CardBattleGame\Infrastructure\Container;
 use CardBattleGame\Infrastructure\GameRepositoryImpl;
 use Prooph\Common\Event\ProophActionEventEmitter;
 use Prooph\Common\Messaging\DomainEvent;
 use Prooph\EventSourcing\AggregateChanged;
+use Prooph\EventStore\EventStore;
 use Prooph\EventStore\InMemoryEventStore;
 use Prooph\EventStore\Stream;
 use Prooph\EventStore\StreamName;
@@ -41,10 +43,7 @@ final class EventSourcedContext implements Context
 
     public function __construct()
     {
-        $this->eventStore = new TransactionalActionEventEmitterEventStore(
-            new InMemoryEventStore(),
-            new ProophActionEventEmitter()
-        );
+        $this->eventStore = Container::getInstance()->get(EventStore::class);
 
         $streamName = new StreamName('event_stream');
         $this->singleStream = new Stream($streamName, new ArrayIterator());
