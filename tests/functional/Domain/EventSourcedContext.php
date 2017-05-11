@@ -43,10 +43,7 @@ final class EventSourcedContext implements Context
 
     public function __construct()
     {
-        $this->eventStore = new TransactionalActionEventEmitterEventStore(
-            new InMemoryEventStore(),
-            new ProophActionEventEmitter()
-        );
+        $this->eventStore = Container::getInstance()->get(EventStore::class);
 
         $streamName = new StreamName('event_stream');
         $this->singleStream = new Stream($streamName, new ArrayIterator());
