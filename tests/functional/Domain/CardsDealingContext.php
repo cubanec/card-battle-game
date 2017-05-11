@@ -25,17 +25,4 @@ final class CardsDealingContext implements Context
 
         $this->eventSourcedContext->getGameRepository()->save($game);
     }
-
-    /**
-     * @Then player on turn has on hand card of type :arg1 with value :arg2 HP and cost of :arg3 MP
-     */
-    public function playerOnTurnHasOnHandCardOfTypeWithValueHpAndCostOfMp($arg1, $arg2, $arg3)
-    {
-        /** @var ArrayIterator $persistedEventStream */
-        $persistedEventStream = $this->eventSourcedContext->getPersistedEventStream();
-
-        Assertion::isInstanceOf($persistedEventStream->current(), GameCreated::class);
-        $persistedEventStream->next();
-        Assertion::isInstanceOf($persistedEventStream->current(), CardDealtForPlayerOnTurn::class);
-    }
 }
